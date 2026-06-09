@@ -56,7 +56,13 @@ nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.94);backdrop
 .img-slot-hint{font-size:11px;color:var(--text3);opacity:.7}
 .img-slot img{width:100%;border-radius:6px;display:block}
 .img-slot input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.img-slot.has-img{border-style:solid;border-color:var(--border);padding:6px;background:var(--surface)}
+.img-slot.has-img{cursor:zoom-in}
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;padding:1rem}
+.lightbox.open{display:flex}
+.lightbox img{max-width:95vw;max-height:90vh;border-radius:8px;object-fit:contain;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.lightbox-close{position:fixed;top:16px;right:20px;font-size:28px;color:#fff;cursor:pointer;line-height:1;background:rgba(0,0,0,.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.lightbox-close:hover{background:rgba(0,0,0,.7)}
+
 .img-slot.has-img .img-slot-label,.img-slot.has-img .img-slot-hint,.img-slot.has-img .img-icon{display:none}
 .callout{border-radius:var(--radius);padding:.85rem 1.1rem;font-size:13px;line-height:1.7;margin:8px 0;display:flex;gap:10px;align-items:flex-start}
 .callout-icon{font-size:15px;flex-shrink:0;margin-top:1px}
@@ -570,13 +576,33 @@ nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.94);backdrop
     </div>
 
   </div>
+</div>
+
 <div id="page-qa" class="page"><div class="hero"><span class="hero-tag">Q&amp;A</span><h1>常見問題</h1><p>常見疑問整理，點開看答案。</p></div><div class="content"><div class="accordion"><div class="acc-item"><div class="acc-header" onclick="toggleAcc(this)"><span>Q：口試委員是誰？</span><span class="acc-arrow">▼</span></div><div class="acc-body">請去問你的指導教授。</div></div><div class="acc-item"><div class="acc-header" onclick="toggleAcc(this)"><span>Q：論文要不要印實體的出來？</span><span class="acc-arrow">▼</span></div><div class="acc-body">請去問你的口試委員。</div></div><div class="acc-item"><div class="acc-header" onclick="toggleAcc(this)"><span>Q：簡報要不要印實體的出來？</span><span class="acc-arrow">▼</span></div><div class="acc-body">請去問你的口試委員。</div></div><div class="acc-item"><div class="acc-header" onclick="toggleAcc(this)"><span>Q：原創性報告要不要印實體的出來？</span><span class="acc-arrow">▼</span></div><div class="acc-body">不用。</div></div><div class="acc-item"><div class="acc-header" onclick="toggleAcc(this)"><span>Q：口試當天要準備什麼？</span><span class="acc-arrow">▼</span></div><div class="acc-body">基本上就是有吃有喝，看你們的預算。</div></div><div class="acc-item"><div class="acc-header" onclick="toggleAcc(this)"><span>Q：電子論文審核要等多久？</span><span class="acc-arrow">▼</span></div><div class="acc-body">電子論文依上傳順序人工審核，約需 1–2 工作日。請勿來電催促或要求插隊。如需修改，先「取消審核」後重新上傳，修改到通過為止。</div></div><div class="acc-item"><div class="acc-header" onclick="toggleAcc(this)"><span>Q：系所名稱填錯了怎麼辦？</span><span class="acc-arrow">▼</span></div><div class="acc-body">國圖系統的系所名稱一旦填寫就無法修改。若真的填錯，請聯絡圖書館資訊服務組（分機 3129）。</div></div><div class="acc-item"><div class="acc-header" onclick="toggleAcc(this)"><span>Q：有問題找誰？</span><span class="acc-arrow">▼</span></div><div class="acc-body">論文建檔或審核問題：圖書館資訊服務組 分機 3129（bysuper@mail.ntut.edu.tw）。離校相關問題：系所辦公室。</div></div></div></div></div>
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lightbox-close" onclick="closeLightbox()">✕</div>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
 <script>
 function showPage(id,tabEl){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   if(tabEl)tabEl.classList.add('active');
+  // Reset sub-nav to first tab
+  const page = document.getElementById('page-'+id);
+  const phaseContents = page.querySelectorAll('.phase-content');
+  const phaseBtns = page.querySelectorAll('.phase-btn');
+  if(phaseContents.length){
+    phaseContents.forEach(c=>c.classList.remove('active'));
+    phaseBtns.forEach(b=>b.classList.remove('active'));
+    phaseContents[0].classList.add('active');
+    if(phaseBtns[0]) phaseBtns[0].classList.add('active');
+  }
+  // Scroll to top
+  window.scrollTo({top:0, behavior:'instant'});
 }
 function showPhase(page,phase,btn){
   const parent=document.getElementById('page-'+page);
@@ -601,6 +627,22 @@ function loadImg(input){
   };
   reader.readAsDataURL(file);
 }
+function openLightbox(src){
+  document.getElementById('lightbox-img').src=src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(e){
+  if(e && e.target===document.getElementById('lightbox-img'))return;
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+// Attach click to all embedded images
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.img-slot.has-img img').forEach(img=>{
+    img.addEventListener('click',()=>openLightbox(img.src));
+  });
+});
 </script>
 </body>
 </html>

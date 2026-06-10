@@ -20,7 +20,12 @@
 }
 html{scroll-behavior:smooth}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.7}
-nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1rem;display:flex;align-items:center;height:52px;gap:8px;overflow:hidden}
+nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0;display:flex;flex-direction:column;height:auto;overflow:hidden}
+.nav-inner-top{display:flex;align-items:center;padding:0 1rem;height:42px;border-bottom:1px solid var(--border)}
+.nav-inner-tabs{display:flex;gap:2px;padding:4px 8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.nav-inner-tabs::-webkit-scrollbar{display:none}
+/* keep phase-nav sticky offset in sync */
+.phase-nav{top:82px}
 .nav-logo{font-size:14px;font-weight:500;letter-spacing:.02em;margin-right:auto;white-space:nowrap}
 .nav-tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex-shrink:1;min-width:0}
 .nav-tabs::-webkit-scrollbar{display:none}
@@ -156,8 +161,10 @@ nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.94);backdrop
 <body>
 
 <nav>
-  <span class="nav-logo">論文生存指南 — 113北資財</span>
-  <div class="nav-tabs">
+  <div class="nav-inner-top">
+    <span class="nav-logo">論文生存指南 — 113北資財</span>
+  </div>
+  <div class="nav-inner-tabs">
     <button class="nav-tab active" onclick="showPage('home',this)">🏠 首頁</button>
     <button class="nav-tab" onclick="showPage('tips',this)">論文撰寫技巧</button>
     <button class="nav-tab" onclick="showPage('before',this)">口試前準備</button>
@@ -171,6 +178,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,0.94);backdrop
     <span class="hero-tag">113北資財 — 論文生存指南</span>
     <h1>從撰寫論文<br>到領到畢業證書</h1>
     <p>整理口試前後所有流程與文件，依你現在的階段選擇入口，按步驟完成就對了。</p>
+    <p style="font-size:12px;color:var(--text3);margin-top:-1rem">僅供 NTUT EMBA 學長姐參考，實際流程以學校公告為主。</p>
   </div>
   <div class="home-content">
     <div class="flow-diagram">
@@ -645,5 +653,18 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 });
 </script>
+<!-- Footer -->
+<footer style="border-top:1px solid var(--border);background:var(--surface2);padding:2rem;margin-top:0">
+  <div style="max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:10px">
+    <div style="font-size:13px;color:var(--text2);line-height:1.8">
+      本指南由 113北資財 Angela 根據個人實際辦理經驗整理，僅供 NTUT EMBA 學長姐參考使用。內容以撰寫當下的系統流程與規定為準，實際辦理時請以學校圖書館及各相關單位的最新公告為主。如有流程異動，本指南不會即時更新，造成不便敬請見諒。
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+      <span style="font-size:12px;color:var(--text3);font-family:'DM Mono',monospace">113北資財 Angela &nbsp;·&nbsp; 2026</span>
+      <span style="font-size:12px;color:var(--text3)">NTUT EMBA 論文生存指南</span>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
